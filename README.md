@@ -1,1 +1,1 @@
-# springboot-shop-with-jpa
+# book-springboot-shop-with-jpa
