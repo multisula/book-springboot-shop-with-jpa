@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Table(name="item")
 @Entity
-public class Item {
+public class Item extends BaseEntity {
   @Id
   @Column(name = "item_id")
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,9 +34,6 @@ public class Item {
   @Enumerated(EnumType.STRING)
   private ItemSellStatus itemSellStatus;  // 상품 판매 상태
 
-  private LocalDateTime regTime;  // 등록 시간
-  private LocalDateTime updateTime;  // 수정 시간
-
   @Builder
   public Item(String itemNm, int price, String itemDetail, ItemSellStatus itemSellStatus, int stockNumber, LocalDateTime regTime, LocalDateTime updateTime) {
     this.itemNm = itemNm;
@@ -44,7 +41,5 @@ public class Item {
     this.stockNumber = stockNumber;
     this.itemDetail = itemDetail;
     this.itemSellStatus = itemSellStatus;
-    this.regTime = regTime;
-    this.updateTime = updateTime;
   }
 }
