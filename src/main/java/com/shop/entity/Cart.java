@@ -1,18 +1,18 @@
 package com.shop.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
-@Getter
-@Table(name = "cart")
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
+@Table(name = "cart")
+@Getter
+@Setter
+@ToString
 public class Cart extends BaseEntity {
+
   @Id
   @Column(name = "cart_id")
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,8 +22,4 @@ public class Cart extends BaseEntity {
   @JoinColumn(name = "member_id")
   private Member member;
 
-  @Builder
-  public Cart(Member member) {
-    this.member = member;
-  }
 }

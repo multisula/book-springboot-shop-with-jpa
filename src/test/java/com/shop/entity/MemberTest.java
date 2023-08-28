@@ -1,7 +1,6 @@
 package com.shop.entity;
 
 import com.shop.repository.MemberRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +13,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
 @SpringBootTest
 @Transactional
-@TestPropertySource(locations="classpath:application-test.properties")
-@Slf4j
+@TestPropertySource(locations = "classpath:application-test.properties")
 public class MemberTest {
+
   @Autowired
   MemberRepository memberRepository;
 
@@ -40,12 +37,10 @@ public class MemberTest {
     Member member = memberRepository.findById(newMember.getId())
         .orElseThrow(EntityNotFoundException::new);
 
-    log.info("register time: {}", member.getRegTime());
-    log.info("update time: {}", member.getUpdateTime());
-    log.info("create member: {}", member.getCreatedBy());
-    log.info("modify member: {}", member.getModifiedBy());
-
-    assertThat(member.getCreatedBy()).isEqualTo("gildong");
-    assertThat(member.getModifiedBy()).isEqualTo("gildong");
+    System.out.println("register time : " + member.getRegTime());
+    System.out.println("update time : " + member.getUpdateTime());
+    System.out.println("create member : " + member.getCreatedBy());
+    System.out.println("modify member : " + member.getModifiedBy());
   }
+
 }

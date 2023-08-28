@@ -2,7 +2,6 @@ package com.shop.service;
 
 import com.shop.dto.MemberFormDto;
 import com.shop.entity.Member;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +10,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Transactional
-@TestPropertySource(locations="classpath:application-test.properties")
+@TestPropertySource(locations = "classpath:application-test.properties")
 class MemberServiceTest {
 
   @Autowired
@@ -26,31 +25,24 @@ class MemberServiceTest {
   PasswordEncoder passwordEncoder;
 
   public Member createMember() {
-    MemberFormDto memberFormDto = MemberFormDto.builder()
-        .email("test@email.com")
-        .name("홍길동")
-        .address("서울시 마포구 합정동")
-        .password("1234")
-        .build();
+    MemberFormDto memberFormDto = new MemberFormDto();
+    memberFormDto.setEmail("test@email.com");
+    memberFormDto.setName("홍길동");
+    memberFormDto.setAddress("서울시 마포구 합정동");
+    memberFormDto.setPassword("1234");
     return Member.createMember(memberFormDto, passwordEncoder);
   }
-
-//  @BeforeEach
-//  public void beforeEach() {
-//
-//  }
 
   @Test
   @DisplayName("회원가입 테스트")
   public void saveMemberTest() {
     Member member = createMember();
     Member savedMember = memberService.saveMember(member);
-
-    assertThat(member.getEmail()).isEqualTo(savedMember.getEmail());
-    assertThat(member.getName()).isEqualTo(savedMember.getName());
-    assertThat(member.getAddress()).isEqualTo(savedMember.getAddress());
-    assertThat(member.getPassword()).isEqualTo(savedMember.getPassword());
-    assertThat(member.getRole()).isEqualTo(savedMember.getRole());
+    assertEquals(member.getEmail(), savedMember.getEmail());
+    assertEquals(member.getName(), savedMember.getName());
+    assertEquals(member.getAddress(), savedMember.getAddress());
+    assertEquals(member.getPassword(), savedMember.getPassword());
+    assertEquals(member.getRole(), savedMember.getRole());
   }
 
   @Test
@@ -59,10 +51,9 @@ class MemberServiceTest {
     Member member1 = createMember();
     Member member2 = createMember();
     memberService.saveMember(member1);
-
-//    Throwable e = Assertions.assertThrows();
-    assertThatThrownBy(() -> memberService.saveMember(member2))
-        .isInstanceOf(IllegalStateException.class)
-        .hasMessage("이미 가입된 회원입니다.");
+    Throwable e = assertThrows(IllegalStateException.class, () -> {
+      memberService.saveMember(member2);
+    });
+    assertEquals("이미 가입된 회원입니다.", e.getMessage());
   }
 }

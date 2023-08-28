@@ -1,7 +1,7 @@
 package com.shop.config;
 
 import com.shop.service.MemberService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,10 +15,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-  private final MemberService memberService;
+  @Autowired
+  MemberService memberService;
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -26,20 +26,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .loginPage("/members/login")
         .defaultSuccessUrl("/")
         .usernameParameter("email")
-        .failureUrl("/member/login/error")
+        .failureUrl("/members/login/error")
         .and()
         .logout()
-        .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
-        .logoutSuccessUrl("/");
+        .logoutRequestMatcher(new AntPathRequestMatcher("/members/logout"))
+        .logoutSuccessUrl("/")
+    ;
 
     http.authorizeRequests()
         .mvcMatchers("/", "/members/**", "/item/**", "/images/**").permitAll()
         .mvcMatchers("/admin/**").hasRole("ADMIN")
-        .anyRequest().authenticated();
+        .anyRequest().authenticated()
+    ;
 
     http.exceptionHandling()
-        .authenticationEntryPoint(new CustomAuthenticationEntryPoint());
-
+        .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+    ;
   }
 
   @Bean
@@ -57,4 +59,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   public void configure(WebSecurity web) throws Exception {
     web.ignoring().antMatchers("/css/**", "/js/**", "/img/**");
   }
+
 }

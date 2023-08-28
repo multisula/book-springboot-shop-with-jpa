@@ -9,25 +9,23 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.transaction.annotation.Transactional;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
 @TestPropertySource(locations = "classpath:application-test.properties")
-public class ItemControllerTest {
+class ItemControllerTest {
+
   @Autowired
-  private MockMvc mockMvc;
+  MockMvc mockMvc;
 
   @Test
   @DisplayName("상품 등록 페이지 권한 테스트")
   @WithMockUser(username = "admin", roles = "ADMIN")
   public void itemFormTest() throws Exception {
-    mockMvc.perform(get("/admin/item/new"))
+    mockMvc.perform(MockMvcRequestBuilders.get("/admin/item/new"))
         .andDo(print())
         .andExpect(status().isOk());
   }
@@ -36,7 +34,7 @@ public class ItemControllerTest {
   @DisplayName("상품 등록 페이지 일반 회원 접근 테스트")
   @WithMockUser(username = "user", roles = "USER")
   public void itemFormNotAdminTest() throws Exception {
-    mockMvc.perform(get("/admin/item/new"))
+    mockMvc.perform(MockMvcRequestBuilders.get("/admin/item/new"))
         .andDo(print())
         .andExpect(status().isForbidden());
   }
